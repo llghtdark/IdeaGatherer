@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Local Storage for Text File</title>
+</head>
+<body>
+
+<textarea id="fileContent" placeholder="Enter text here..."></textarea>
+<button id="saveButton">Save Text</button>
+<button id="loadButton">Load Text</button>
+
+<script>
+// Function to save the text to local storage as a text file
+document.getElementById('saveButton').addEventListener('click', function() {
+    var textToSave = document.getElementById('fileContent').value;
+    var blob = new Blob([textToSave], { type: 'text/plain' });
+    var url = URL.createObjectURL(blob);
+    localStorage.setItem('savedTextFile', url);
+});
+
+// Function to load the text from local storage and display it
+document.getElementById('loadButton').addEventListener('click', function() {
+    var savedUrl = localStorage.getItem('savedTextFile');
+    if (savedUrl) {
+        fetch(savedUrl)
+            .then(response => response.text())
+            .then(text => {
+                document.getElementById('fileContent').value = text;
+            })
+            .catch(error => {
+                console.error('Error loading text file:', error);
+            });
+    } else {
+        console.error('No text file found in local storage.');
+    }
+});
+
+</script>
+
+</body>
+</html>
